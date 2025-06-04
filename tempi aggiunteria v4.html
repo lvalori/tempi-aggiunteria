@@ -167,6 +167,17 @@
                 transition: all 0.2s ease;
             }
 
+            /* Stili delle intestazioni delle tabelle */
+            .table-header-sbassatura { background: linear-gradient(135deg, #2962FF, #1565C0); color: white; }
+            .table-header-scarnitura { background: linear-gradient(135deg, #00C853, #2E7D32); color: white; }
+            .table-header-segni { background: linear-gradient(135deg, #6200EA, #4527A0); color: white; }
+            .table-header-applicazioni-termo { background: linear-gradient(135deg, #FF6D00, #E65100); color: white; }
+            .table-header-applicazioni-manuali { background: linear-gradient(135deg, #D50000, #B71C1C); color: white; }
+            .table-header-cucitura { background: linear-gradient(135deg, #304FFE, #1A237E); color: white; }
+            .table-header-ribattitura { background: linear-gradient(135deg, #00BFA5, #00796B); color: white; }
+            .table-header-preparazione-montaggio { background: linear-gradient(135deg, #FF3D00, #D84315); color: white; }
+            .table-header-rifilatura { background: linear-gradient(135deg, #C51162, #880E4F); color: white; }
+
             /* Utility classes */
             .hidden { display: none; }
 
@@ -175,6 +186,21 @@
                 .no-print { display: none; }
                 body { background: white; }
                 .container { box-shadow: none; border: none; }
+                .summary-container .row {
+                    display: flex;
+                    flex-wrap: wrap;
+                }
+
+                .summary-container .card {
+                    flex: 0 0 calc(50% - 1rem);
+                    margin: 0.5rem;
+                }
+
+                @media (max-width: 768px) {
+                    .summary-container .card {
+                        flex: 0 0 100%;
+                    }
+                }
                 .summary-container {
                     width: 100%;
                     max-width: none;
@@ -195,7 +221,7 @@
             }
         </style>
     </head>
-        <body>
+    <body>
         <div class="container">
             <h1 class="text-center mb-4">Tempi Aggiunteria</h1>
 
@@ -247,14 +273,14 @@
                         <div class="form-group">
                             <label for="prototype-start-time">Orario Inizio:</label>
                             <input type="text" id="prototype-start-time" name="start-time" class="form-control" 
-                                   placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
+                                placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="prototype-end-time">Orario Fine:</label>
                             <input type="text" id="prototype-end-time" name="end-time" class="form-control" 
-                                   placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
+                                placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
                         </div>
                     </div>
                 </div>
@@ -274,7 +300,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-8">
                         <label for="article-name-manual">Nome Articolo:</label>
-                        <input type="text" id="article-name-manual" name="name" class="form-control" required>
+                        <input type="text" id="article-name-manual" name="name" class="form-control">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="progress-manual">Avanzamento:</label>
@@ -299,12 +325,12 @@
                             <div class="form-group">
                                 <label for="manual-start-time">Orario Inizio:</label>
                                 <input type="text" id="manual-start-time" name="start-time" class="form-control" 
-                                       placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
+                                    placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
                             </div>
                             <div class="form-group">
                                 <label for="manual-end-time">Orario Fine:</label>
                                 <input type="text" id="manual-end-time" name="end-time" class="form-control" 
-                                       placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
+                                    placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
                             </div>
                         </div>
                     </div>
@@ -334,7 +360,7 @@
                     <div class="form-group col-8">
                         <label for="manual-time">Tempo (hh:mm:ss):</label>
                         <input type="text" id="manual-time" class="form-control" placeholder="00:00:00" 
-                               pattern="^\d{2}:\d{2}:\d{2}$">
+                            pattern="^\d{2}:\d{2}:\d{2}$">
                     </div>
                     <div class="form-group col-4">
                         <label for="manual-seconds">o Secondi:</label>
@@ -361,7 +387,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-8">
                         <label for="article-name-import">Nome Articolo:</label>
-                        <input type="text" id="article-name-import" name="name" class="form-control" required>
+                        <input type="text" id="article-name-import" name="name" class="form-control">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="progress-import">Avanzamento:</label>
@@ -386,12 +412,12 @@
                             <div class="form-group">
                                 <label for="import-start-time">Orario Inizio:</label>
                                 <input type="text" id="import-start-time" name="start-time" class="form-control" 
-                                       placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
+                                    placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
                             </div>
                             <div class="form-group">
                                 <label for="import-end-time">Orario Fine:</label>
                                 <input type="text" id="import-end-time" name="end-time" class="form-control" 
-                                       placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
+                                    placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
                             </div>
                         </div>
                     </div>
@@ -421,439 +447,825 @@
                 </div>
             </form>
         </div>
-                <!-- Script necessari -->
+        <!-- Script necessari -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <!-- Il nostro JavaScript -->
         <script>
-            // App State e Navigation
-            const AppState = {
-                currentScreen: 'home',
-                prototype: {
-                    images: [],
-                    name: '',
-                    startTime: '',
-                    endTime: ''
-                },
-                manual: {
-                    images: [],
-                    articleName: '',
-                    progress: 'campionario',
-                    startTime: '',
-                    endTime: '',
-                    phaseData: {},
-                    savedAt: ''
-                },
-                import: {
-                    images: [],
-                    operations: [],
-                    articleName: '',
-                    progress: 'campionario',
-                    startTime: '',
-                    endTime: ''
-                }
-            };
+            // Variabili globali
+            let prototypeImages = [];
+            let manualPhaseData = {};
+            let imagesManual = [];
+            let importedImages = [];
+            let importedOperations = [];
+            let manualArticleName = '';
+            let manualProgress = '';
+            let manualStartTime = '';
+            let manualEndTime = '';
 
-            const Navigation = {
-                showScreen: (screenId) => {
-                    const screens = ['home-screen', 'new-prototype-form', 'manual-input-form', 'import-form'];
-                    screens.forEach(screen => {
-                        document.getElementById(screen).classList.toggle('hidden', screen !== screenId);
-                    });
-                    AppState.currentScreen = screenId;
-                },
-                
-                init: () => {
-                    document.getElementById('newPrototypeBtn').addEventListener('click', () => Navigation.showScreen('new-prototype-form'));
-                    document.getElementById('manualInputBtn').addEventListener('click', () => Navigation.showScreen('manual-input-form'));
-                    document.getElementById('homeBtn').addEventListener('click', () => Navigation.showScreen('home-screen'));
-                    document.getElementById('importTxtBtn').addEventListener('click', () => Navigation.showScreen('import-form'));
+            // Funzioni di gestione della navigazione
+            function showHomeScreen() {
+                document.getElementById('home-screen').classList.remove('hidden');
+                document.getElementById('new-prototype-form').classList.add('hidden');
+                document.getElementById('manual-input-form').classList.add('hidden');
+                document.getElementById('import-form').classList.add('hidden');
+                resetForms();
+            }
 
-                    // Eventi per i pulsanti "Torna alla Home"
-                    document.querySelectorAll('.homeBtn').forEach(btn => {
-                        btn.addEventListener('click', () => Navigation.showScreen('home-screen'));
-                    });
+            function showScreen(screenId) {
+                document.getElementById('home-screen').classList.add('hidden');
+                document.getElementById('new-prototype-form').classList.add('hidden');
+                document.getElementById('manual-input-form').classList.add('hidden');
+                document.getElementById('import-form').classList.add('hidden');
+                document.getElementById(screenId).classList.remove('hidden');
+            }
 
-                    // Eventi per i pulsanti delle foto
-                    document.getElementById('prototypePhotoBtn').addEventListener('click', () => {
-                        document.getElementById('prototype-image-input').click();
-                    });
-                    document.getElementById('manualPhotoBtn').addEventListener('click', () => {
-                        document.getElementById('manual-image-input').click();
-                    });
-                    document.getElementById('importPhotoBtn').addEventListener('click', () => {
-                        document.getElementById('import-image-input').click();
-                    });
-
-                    // Eventi per l'upload delle immagini
-                    document.getElementById('prototype-image-input').addEventListener('change', (e) => ImageHandler.handleImageUpload(e, 'prototype'));
-                    document.getElementById('manual-image-input').addEventListener('change', (e) => ImageHandler.handleImageUpload(e, 'manual'));
-                    document.getElementById('import-image-input').addEventListener('change', (e) => ImageHandler.handleImageUpload(e, 'import'));
-
-                    // Eventi per l'importazione dei file
-                    document.getElementById('import-txt-input').addEventListener('change', (e) => ImportHandler.handleTxtImport(e));
-                    document.getElementById('load-session-input').addEventListener('change', (e) => ImportHandler.loadSessionFromFile(e));
-                }
-            };
-
-            // Image Handler
-            const ImageHandler = {
-                async resizeImage(file) {
-                    return new Promise((resolve) => {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            const img = new Image();
-                            img.onload = () => {
-                                const canvas = document.createElement('canvas');
-                                const ctx = canvas.getContext('2d');
-                                canvas.width = 300;
-                                canvas.height = 300;
-                                
-                                const size = Math.min(img.width, img.height);
-                                const startX = (img.width - size) / 2;
-                                const startY = (img.height - size) / 2;
-                                
-                                ctx.drawImage(img, startX, startY, size, size, 0, 0, 300, 300);
-                                resolve(canvas.toDataURL('image/jpeg', 0.8));
-                            };
-                            img.src = e.target.result;
-                        };
-                        reader.readAsDataURL(file);
-                    });
-                },
-
-                updateGallery(context) {
-                    const galleryId = `image-gallery-${context}`;
-                    const images = AppState[context].images;
-                    
-                    const gallery = document.getElementById(galleryId);
-                    if (gallery && images) {
-                        gallery.innerHTML = images.map((imageData, index) => `
-                            <div class="image-container">
-                                <img src="${imageData}" alt="Foto ${index + 1}">
-                                <div class="delete-image" data-index="${index}" data-context="${context}">&times;</div>
-                            </div>
-                        `).join('');
-                    }
-                },
-
-                async handleImageUpload(event, context) {
-                    const file = event.target.files[0];
-                    if (file) {
-                        const resizedImage = await this.resizeImage(file);
-                        AppState[context].images.push(resizedImage);
-                        this.updateGallery(context);
-                    }
-                },
-
-                deleteImage(index, context) {
-                    AppState[context].images.splice(index, 1);
-                    this.updateGallery(context);
-                },
-
-                init() {
-                    // Event delegation per la gestione delle immagini
-                    document.addEventListener('click', (e) => {
-                        if (e.target.classList.contains('delete-image')) {
-                            const { index, context } = e.target.dataset;
-                            this.deleteImage(parseInt(index), context);
-                        }
-                    });
-                }
-            };
-
-            // Time Handler
-            const TimeHandler = {
-                formatTime(seconds) {
-                    const hrs = Math.floor(seconds / 3600);
-                    const mins = Math.floor((seconds % 3600) / 60);
-                    const secs = seconds % 60;
-                    return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-                },
-
-                timeStringToSeconds(str) {
-                    if (/^\d+$/.test(str)) return parseInt(str, 10);
-                    const parts = str.split(':');
-                    if (parts.length !== 3) return 0;
-                    return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseInt(parts[2]);
-                },
-
-                calculateTimeDifference(startTime, endTime) {
-                    const start = this.timeStringToSeconds(startTime);
-                    const end = this.timeStringToSeconds(endTime);
-                    return this.formatTime(end - start);
-                },
-
-                validateTimeFormat(input) {
-                    const timeRegex = /^\d{2}:\d{2}:\d{2}$/;
-                    const isValid = timeRegex.test(input.value);
-                    input.classList.toggle('input-error', !isValid && input.value !== '');
-                    return isValid;
-                }
-            };
-
-            // Import Handler
-            const ImportHandler = {
-                handleTxtImport(event) {
-                    const file = event.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            const content = e.target.result;
-                            const lines = content.trim().split('\n');
+            // Funzioni di gestione immagini
+            async function resizeImage(file) {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            canvas.width = 300;
+                            canvas.height = 300;
                             
-                            AppState.import.operations = [];
-                            lines.forEach((line, index) => {
-                                const [number, startTime, description] = line.trim().split(',');
+                            const size = Math.min(img.width, img.height);
+                            const startX = (img.width - size) / 2;
+                            const startY = (img.height - size) / 2;
+                            
+                            ctx.drawImage(img, startX, startY, size, size, 0, 0, 300, 300);
+                            resolve(canvas.toDataURL('image/jpeg', 0.8));
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            async function handleImageUpload(event, context) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const resizedImage = await resizeImage(file);
+                switch(context) {
+                    case 'prototype':
+                        prototypeImages.push(resizedImage);
+                        updateImageGallery('prototype');
+                        break;
+                    case 'manual':
+                        imagesManual.push(resizedImage);
+                        updateImageGallery('manual');
+                        break;
+                    case 'import':
+                        importedImages.push(resizedImage);
+                        updateImageGallery('import');
+                        break;
+                }
+            }
+
+            function updateImageGallery(context) {
+                const galleryMap = {
+                    'prototype': { id: 'image-gallery-prototype', images: prototypeImages },
+                    'manual': { id: 'image-gallery-manual', images: imagesManual },
+                    'import': { id: 'image-gallery-import', images: importedImages }
+                };
+
+                const gallery = document.getElementById(galleryMap[context].id);
+                const images = galleryMap[context].images;
+
+                if (gallery && images) {
+                    gallery.innerHTML = images.map((imageData, index) => `
+                        <div class="image-container">
+                            <img src="${imageData}" alt="Foto ${index + 1}">
+                            <div class="delete-image" onclick="deleteImage(${index}, '${context}')">&times;</div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            function deleteImage(index, context) {
+                switch(context) {
+                    case 'prototype':
+                        prototypeImages.splice(index, 1);
+                        break;
+                    case 'manual':
+                        imagesManual.splice(index, 1);
+                        break;
+                    case 'import':
+                        importedImages.splice(index, 1);
+                        break;
+                }
+                updateImageGallery(context);
+            }
+
+            // Funzioni di gestione del tempo
+            function formatTime(seconds) {
+                const hrs = Math.floor(seconds / 3600);
+                const mins = Math.floor((seconds % 3600) / 60);
+                const secs = seconds % 60;
+                return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            function timeStringToSeconds(str) {
+                if (/^\d+$/.test(str)) return parseInt(str, 10);
+                const parts = str.split(':');
+                if (parts.length !== 3) return 0;
+                return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseInt(parts[2]);
+            }
+
+            function calculateTimeDifference(startTime, endTime) {
+                const start = timeStringToSeconds(startTime);
+                const end = timeStringToSeconds(endTime);
+                return formatTime(end - start);
+            }
+
+            function validateTimeFormat(input) {
+                const timeRegex = /^\d{2}:\d{2}:\d{2}$/;
+                const isValid = timeRegex.test(input.value);
+                input.classList.toggle('input-error', !isValid && input.value !== '');
+                return isValid;
+            }
+
+            // Funzioni di gestione del prototipo
+            function handlePrototypeSubmit(event) {
+                event.preventDefault();
+                const form = event.target;
+                const name = document.getElementById('prototype-name').value.trim();
+                const startTime = document.getElementById('prototype-start-time').value;
+                const endTime = document.getElementById('prototype-end-time').value;
+
+                if (!validatePrototypeData(name, startTime, endTime)) return;
+
+                const totalTime = calculateTimeDifference(startTime, endTime);
+                showPrototypeSummary(name, startTime, endTime, totalTime);
+            }
+
+            function validatePrototypeData(name, startTime, endTime) {
+                let isValid = true;
+
+                if (!name) {
+                    document.getElementById('prototype-name').classList.add('input-error');
+                    isValid = false;
+                }
+
+                if (startTime && !validateTimeFormat(document.getElementById('prototype-start-time'))) {
+                    isValid = false;
+                }
+                if (endTime && !validateTimeFormat(document.getElementById('prototype-end-time'))) {
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            function showPrototypeSummary(name, startTime, endTime, totalTime) {
+                const container = document.querySelector('.container');
+                const gallery = prototypeImages.map((imageData, index) => `
+                    <div class="image-container">
+                        <img src="${imageData}" alt="Foto ${index + 1}">
+                    </div>
+                `).join('');
+
+                container.innerHTML = `
+                    <div class="summary-container">
+                        <h2 class="text-center mb-3">
+                            ${name.toUpperCase()}
+                            <small class="d-block text-muted">Prototipo</small>
+                        </h2>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6 mx-auto">
+                                <div class="image-gallery">${gallery}</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mx-auto">
+                                <div class="time-info">
+                                    ${startTime ? `<p><strong>Inizio:</strong> ${startTime}</p>` : ''}
+                                    ${endTime ? `<p><strong>Fine:</strong> ${endTime}</p>` : ''}
+                                    <p><strong>Tempo Totale:</strong> ${totalTime}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-3 mb-2 no-print">
+                            <button onclick="generatePDF('${name}', 'Prototipo')" class="btn btn-success mx-1">
+                                <i class="fas fa-save"></i> Salva PDF
+                            </button>
+                            <button onclick="location.reload()" class="btn btn-outline-secondary mx-1">
+                                <i class="fas fa-redo"></i> Nuova Rilevazione
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Funzioni di gestione dell'input manuale
+            function addManualTime(event) {
+                event.preventDefault();
+                const phase = document.getElementById('phase-manual').value;
+                const position = document.getElementById('position-manual').value.trim();
+                const timeInput = document.getElementById('manual-time').value.trim();
+                const secondsInput = document.getElementById('manual-seconds').value.trim();
+
+                if (!validateManualInput(position, timeInput, secondsInput)) return;
+
+                const timeInSeconds = secondsInput ? 
+                    parseInt(secondsInput) : 
+                    timeStringToSeconds(timeInput);
+
+                if (!manualPhaseData[phase]) {
+                    manualPhaseData[phase] = [];
+                }
+
+                manualPhaseData[phase].push({
+                    position: position,
+                    timeSpent: timeInSeconds
+                });
+
+                clearManualInputFields();
+                updatePositionsListManual();
+            }
+
+            function validateManualInput(position, timeInput, secondsInput) {
+                let isValid = true;
+
+                if (!position) {
+                    document.getElementById('position-manual').classList.add('input-error');
+                    isValid = false;
+                }
+
+                if (!timeInput && !secondsInput) {
+                    document.getElementById('manual-time').classList.add('input-error');
+                    document.getElementById('manual-seconds').classList.add('input-error');
+                    isValid = false;
+                }
+
+                if (timeInput && !validateTimeFormat(document.getElementById('manual-time'))) {
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            function clearManualInputFields() {
+                document.getElementById('position-manual').value = '';
+                document.getElementById('manual-time').value = '';
+                document.getElementById('manual-seconds').value = '';
+                document.getElementById('position-manual').classList.remove('input-error');
+                document.getElementById('manual-time').classList.remove('input-error');
+                document.getElementById('manual-seconds').classList.remove('input-error');
+            }
+
+            function updatePositionsListManual() {
+                const positionsList = document.getElementById('positions-data-manual');
+                let html = '';
+
+                Object.entries(manualPhaseData).forEach(([phase, data]) => {
+                    data.forEach((item, index) => {
+                        html += `
+                            <li>
+                                <div>
+                                    <strong>${phase}:</strong> ${item.position}
+                                    <small class="text-muted d-block">Tempo: ${formatTime(item.timeSpent)}</small>
+                                </div>
+                                <button class="btn btn-sm btn-danger" onclick="deletePosition('${phase}', ${index})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </li>
+                        `;
+                    });
+                });
+
+                positionsList.innerHTML = html;
+                document.getElementById('positions-list-manual').classList.remove('hidden');
+            }
+
+            function deletePosition(phase, index) {
+                if (manualPhaseData[phase]) {
+                    manualPhaseData[phase].splice(index, 1);
+                    if (manualPhaseData[phase].length === 0) {
+                        delete manualPhaseData[phase];
+                    }
+                    updatePositionsListManual();
+                }
+            }
+
+            function handleManualSubmit(event) {
+                event.preventDefault();
+                const name = document.getElementById('article-name-manual').value.trim();
+                const progress = document.getElementById('progress-manual').value;
+                const startTime = document.getElementById('manual-start-time').value;
+                const endTime = document.getElementById('manual-end-time').value;
+
+                if (!validateManualSubmit(name)) return;
+
+                showManualSummary(name, progress, startTime, endTime);
+            }
+
+            function validateManualSubmit(name) {
+                if (!name) {
+                    document.getElementById('article-name-manual').classList.add('input-error');
+                    return false;
+                }
+                return true;
+            }
+
+            function showManualSummary(name, progress, startTime, endTime) {
+                const totalTime = startTime && endTime ? calculateTimeDifference(startTime, endTime) : "00:00:00";
+                const container = document.querySelector('.container');
+                
+                let summaryHTML = `
+                    <div class="summary-container">
+                        <h2 class="text-center mb-3">
+                            ${name.toUpperCase()}
+                            <small class="d-block text-muted">${progress}</small>
+                        </h2>`;
+
+                // Aggiungi sezione immagini se presenti
+                if (imagesManual.length > 0) {
+                    summaryHTML += `
+                        <div class="row mb-3">
+                            <div class="col-md-6 mx-auto">
+                                <div class="image-gallery">
+                                    ${imagesManual.map((imageData, index) => `
+                                        <div class="image-container">
+                                            <img src="${imageData}" alt="Foto ${index + 1}">
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>`;
+                }
+
+                // Aggiungi informazioni temporali
+                summaryHTML += `
+                    <div class="row mb-3">
+                        <div class="col-md-6 mx-auto">
+                            <div class="time-info">
+                                ${startTime ? `<p><strong>Inizio:</strong> ${startTime}</p>` : ''}
+                                ${endTime ? `<p><strong>Fine:</strong> ${endTime}</p>` : ''}
+                                <p><strong>Tempo Totale:</strong> ${totalTime}</p>
+                            </div>
+                        </div>
+                    </div>`;
+
+                // Aggiungi tabelle delle fasi
+                Object.entries(manualPhaseData).forEach(([phase, data]) => {
+                    const totalPhaseTime = data.reduce((acc, curr) => acc + curr.timeSpent, 0);
+                    
+                    summaryHTML += `
+                        <div class="card mb-3">
+                            <div class="card-header table-header-${phase}">
+                                <h5 class="mb-0">${phase.charAt(0).toUpperCase() + phase.slice(1)}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Posizione</th>
+                                                <th>Tempo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${data.map(item => `
+                                                <tr>
+                                                    <td>${item.position}</td>
+                                                    <td>${formatTime(item.timeSpent)}</td>
+                                                </tr>
+                                            `).join('')}
+                                            <tr class="table-active">
+                                                <td><strong>Totale ${phase}</strong></td>
+                                                <td><strong>${formatTime(totalPhaseTime)}</strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+
+                // Aggiungi pulsanti
+                summaryHTML += `
+                    <div class="text-center mt-3 mb-2 no-print">
+                        <button onclick="generatePDF('${name}', '${progress}')" class="btn btn-success mx-1">
+                            <i class="fas fa-save"></i> Salva PDF
+                        </button>
+                        <button onclick="saveCurrentSession()" class="btn btn-primary mx-1">
+                            <i class="fas fa-download"></i> Salva Sessione
+                        </button>
+                        <button onclick="location.reload()" class="btn btn-outline-secondary mx-1">
+                            <i class="fas fa-redo"></i> Nuova Rilevazione
+                        </button>
+                    </div>
+                </div>`;
+
+                container.innerHTML = summaryHTML;
+            }
+
+            // Funzioni di gestione dell'importazione
+            function handleTxtImport(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const content = e.target.result;
+                        const lines = content.trim().split('\n');
+                        
+                        importedOperations = [];
+                        let lastTime = null;
+                        
+                        lines.forEach((line, index) => {
+                            const parts = line.trim().split(',');
+                            if (parts.length >= 3) {
+                                const number = parseInt(parts[0]);
+                                const startTime = parts[1].trim();
+                                const description = parts[2].trim();
+                                
                                 let duration = '00:00:00';
-                                
-                                if (index < lines.length - 1) {
-                                    const nextLine = lines[index + 1];
-                                    const nextStartTime = nextLine.split(',')[1];
-                                    duration = TimeHandler.calculateTimeDifference(startTime, nextStartTime);
+                                if (lastTime) {
+                                    duration = calculateTimeDifference(lastTime, startTime);
                                 }
+                                lastTime = startTime;
                                 
-                                AppState.import.operations.push({
-                                    number: parseInt(number),
+                                importedOperations.push({
+                                    number,
                                     startTime,
-                                    description: description.trim(),
+                                    description,
                                     duration,
                                     phase: ''
                                 });
-                            });
-                            
-                            this.updateImportedOperationsTable();
-                            Navigation.showScreen('import-form');
-                        };
-                        reader.readAsText(file);
-                    }
-                },
-
-                updateImportedOperationsTable() {
-                    const tbody = document.getElementById('imported-operations-list');
-                    if (!tbody) return;
-
-                    tbody.innerHTML = AppState.import.operations.map(op => `
-                        <tr>
-                            <td>${op.number}</td>
-                            <td>${op.startTime}</td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" 
-                                    value="${op.description}" 
-                                    onchange="ImportHandler.updateOperationDescription(${op.number - 1}, this.value)">
-                            </td>
-                            <td>${op.duration}</td>
-                            <td>
-                                <select class="form-control form-control-sm" 
-                                        onchange="ImportHandler.updateOperationPhase(${op.number - 1}, this.value)">
-                                    <option value="">Seleziona fase...</option>
-                                    <option value="sbassatura">Sbassatura</option>
-                                    <option value="scarnitura">Scarnitura</option>
-                                    <option value="segni">Segni</option>
-                                    <option value="applicazioni-termo">Applicazioni termo</option>
-                                    <option value="applicazioni-manuali">Applicazioni manuali/collanti</option>
-                                    <option value="cucitura">Cucitura</option>
-                                    <option value="ribattitura">Ribattitura</option>
-                                    <option value="preparazione-montaggio">Preparazione montaggio</option>
-                                    <option value="rifilatura">Rifilatura</option>
-                                </select>
-                            </td>
-                        </tr>
-                    `).join('');
-
-                    // Imposta i valori delle fasi selezionate
-                    AppState.import.operations.forEach((op, index) => {
-                        if (op.phase) {
-                            const select = tbody.querySelectorAll('select')[index];
-                            if (select) select.value = op.phase;
-                        }
-                    });
-                },
-
-                updateOperationDescription(index, value) {
-                    AppState.import.operations[index].description = value;
-                },
-
-                updateOperationPhase(index, value) {
-                    AppState.import.operations[index].phase = value;
-                },
-
-                loadSessionFromFile(event) {
-                    const file = event.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            try {
-                                const session = JSON.parse(e.target.result);
-                                Object.assign(AppState.manual, session);
-                                Navigation.showScreen('manual-input-form');
-                                ImageHandler.updateGallery('manual');
-                                this.updatePositionsListManual();
-                            } catch (error) {
-                                console.error('Errore nel caricamento della sessione:', error);
-                                alert('Errore nel caricamento del file di sessione');
                             }
-                        };
-                        reader.readAsText(file);
-                    }
-                },
-
-                updatePositionsListManual() {
-                    const positionsList = document.getElementById('positions-data-manual');
-                    if (!positionsList) return;
-
-                    let html = '';
-                    Object.entries(AppState.manual.phaseData).forEach(([phase, data]) => {
-                        data.forEach((item, index) => {
-                            html += `
-                                <li>
-                                    <div>
-                                        <strong>${phase}:</strong> ${item.position}
-                                        <small class="text-muted d-block">Tempo: ${TimeHandler.formatTime(item.timeSpent)}</small>
-                                    </div>
-                                    <button class="btn btn-sm btn-danger" onclick="ImportHandler.deletePosition('${phase}', ${index})">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </li>
-                            `;
                         });
-                    });
-
-                    positionsList.innerHTML = html;
-                    document.getElementById('positions-list-manual').classList.remove('hidden');
-                },
-
-                deletePosition(phase, index) {
-                    if (AppState.manual.phaseData[phase]) {
-                        AppState.manual.phaseData[phase].splice(index, 1);
-                        if (AppState.manual.phaseData[phase].length === 0) {
-                            delete AppState.manual.phaseData[phase];
-                        }
-                        this.updatePositionsListManual();
+                        
+                        showScreen('import-form');
+                        updateImportedOperationsTable();
+                    } catch (error) {
+                        console.error('Errore durante l\'importazione:', error);
+                        alert('Errore durante l\'importazione del file');
                     }
+                };
+                reader.readAsText(file);
+            }
+
+            function updateOperationDescription(index, value) {
+                importedOperations[index].description = value;
+            }
+
+            function updateOperationPhase(index, value) {
+                importedOperations[index].phase = value;
+                updateImportedOperationsTable();
+            }
+
+            function handleImportSubmit(event) {
+                event.preventDefault();
+                const name = document.getElementById('article-name-import').value.trim();
+                const progress = document.getElementById('progress-import').value;
+                const startTime = document.getElementById('import-start-time').value;
+                const endTime = document.getElementById('import-end-time').value;
+
+                if (!validateImportSubmit(name)) return;
+
+                showImportSummary(name, progress, startTime, endTime);
+            }
+
+            function validateImportSubmit(name) {
+                if (!name) {
+                    document.getElementById('article-name-import').classList.add('input-error');
+                    return false;
                 }
-            };
+                return true;
+            }
 
-            // Prototype Handler
-            const PrototypeHandler = {
-                addPrototype(form) {
-                    const formData = new FormData(form);
-                    
-                    if (!this.validatePrototypeData(formData)) return;
+            function showImportSummary(name, progress, startTime, endTime) {
+                const totalTime = startTime && endTime ? calculateTimeDifference(startTime, endTime) : "00:00:00";
+                const container = document.querySelector('.container');
+                
+                let summaryHTML = `
+                    <div class="summary-container">
+                        <h2 class="text-center mb-3">
+                            ${name.toUpperCase()}
+                            <small class="d-block text-muted">${progress}</small>
+                        </h2>`;
 
-                    const totalTime = TimeHandler.calculateTimeDifference(
-                        formData.get('start-time'),
-                        formData.get('end-time')
-                    );
-
-                    this.showPrototypeSummary(formData, totalTime);
-                },
-
-                validatePrototypeData(formData) {
-                    let isValid = true;
-                    
-                    if (!formData.get('name')) {
-                        document.getElementById('prototype-name').classList.add('input-error');
-                        isValid = false;
-                    }
-
-                    const startTime = formData.get('start-time');
-                    const endTime = formData.get('end-time');
-
-                    if (startTime && !TimeHandler.validateTimeFormat(document.getElementById('prototype-start-time'))) {
-                        isValid = false;
-                    }
-                    if (endTime && !TimeHandler.validateTimeFormat(document.getElementById('prototype-end-time'))) {
-                        isValid = false;
-                    }
-
-                    return isValid;
-                },
-
-                showPrototypeSummary(formData, totalTime) {
-                    const container = document.querySelector('.container');
-                    const gallery = AppState.prototype.images.map((imageData, index) => `
-                        <div class="image-container">
-                            <img src="${imageData}" alt="Foto ${index + 1}">
-                        </div>
-                    `).join('');
-
-                    container.innerHTML = this.generateSummaryHTML(formData, gallery, totalTime);
-                },
-
-                generateSummaryHTML(formData, gallery, totalTime) {
-                    return `
-                        <div class="summary-container">
-                            <h2 class="text-center mb-3">
-                                ${formData.get('name').toUpperCase()}
-                                <small class="d-block text-muted">Prototipo</small>
-                            </h2>
-                            
-                            <div class="row mb-3">
-                                <div class="col-md-6 mx-auto">
-                                    <div class="image-gallery">${gallery}</div>
+                if (importedImages.length > 0) {
+                    summaryHTML += `
+                        <div class="row mb-3">
+                            <div class="col-md-6 mx-auto">
+                                <div class="image-gallery">
+                                    ${importedImages.map((imageData, index) => `
+                                        <div class="image-container">
+                                            <img src="${imageData}" alt="Foto ${index + 1}">
+                                        </div>
+                                    `).join('')}
                                 </div>
                             </div>
+                        </div>`;
+                }
 
-                            <div class="row">
-                                <div class="col-md-6 mx-auto">
-                                    <div class="time-info">
-                                        ${formData.get('start-time') ? `<p><strong>Inizio:</strong> ${formData.get('start-time')}</p>` : ''}
-                                        ${formData.get('end-time') ? `<p><strong>Fine:</strong> ${formData.get('end-time')}</p>` : ''}
-                                        <p><strong>Tempo Totale:</strong> ${totalTime}</p>
+                summaryHTML += `
+                    <div class="row mb-3">
+                        <div class="col-md-6 mx-auto">
+                            <div class="time-info">
+                                ${startTime ? `<p><strong>Inizio:</strong> ${startTime}</p>` : ''}
+                                ${endTime ? `<p><strong>Fine:</strong> ${endTime}</p>` : ''}
+                                <p><strong>Tempo Totale:</strong> ${totalTime}</p>
+                            </div>
+                        </div>
+                    </div>`;
+
+                // Raggruppa le operazioni per fase
+                const operationsByPhase = {};
+                importedOperations.forEach(op => {
+                    if (op.phase) {
+                        if (!operationsByPhase[op.phase]) {
+                            operationsByPhase[op.phase] = [];
+                        }
+                        operationsByPhase[op.phase].push(op);
+                    }
+                });
+
+                // Crea tabelle per ogni fase
+                Object.entries(operationsByPhase).forEach(([phase, operations]) => {
+                    const totalPhaseTime = operations.reduce((acc, curr) => {
+                        return acc + timeStringToSeconds(curr.duration);
+                    }, 0);
+
+                    summaryHTML += `
+                        <div class="card mb-3">
+                            <div class="card-header table-header-${phase}">
+                                <h5 class="mb-0">${phase.charAt(0).toUpperCase() + phase.slice(1)}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>N°</th>
+                                                <th>Inizio</th>
+                                                <th>Posizione</th>
+                                                <th>Durata</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${operations.map(op => `
+                                                <tr>
+                                                    <td>${op.number}</td>
+                                                    <td>${op.startTime}</td>
+                                                    <td>${op.description}</td>
+                                                    <td>${op.duration}</td>
+                                                </tr>
+                                            `).join('')}
+                                            <tr class="table-active">
+                                                <td colspan="3"><strong>Totale ${phase}</strong></td>
+                                                <td><strong>${formatTime(totalPhaseTime)}</strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+
+                summaryHTML += `
+                    <div class="text-center mt-3 mb-2 no-print">
+                        <button onclick="generatePDF('${name}', '${progress}')" class="btn btn-success mx-1">
+                            <i class="fas fa-save"></i> Salva PDF
+                        </button>
+                        <button onclick="location.reload()" class="btn btn-outline-secondary mx-1">
+                            <i class="fas fa-redo"></i> Nuova Rilevazione
+                        </button>
+                    </div>
+                </div>`;
+
+                container.innerHTML = summaryHTML;
+            }
+
+            // Funzione per salvare la sessione corrente
+            function saveCurrentSession() {
+                const articleName = document.getElementById('article-name-manual').value;
+                const session = {
+                    phaseData: manualPhaseData,
+                    images: imagesManual,
+                    articleName: articleName || 'sessione',
+                    progress: document.getElementById('progress-manual').value || 'campionario',
+                    startTime: document.getElementById('manual-start-time').value || '',
+                    endTime: document.getElementById('manual-end-time').value || '',
+                    savedAt: new Date().toISOString()
+                };
+
+                const blob = new Blob([JSON.stringify(session)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${session.articleName}_${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            // Funzione per caricare una sessione salvata
+            function loadSessionFromFile(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const session = JSON.parse(e.target.result);
+                        
+                        // Ripristina i dati della sessione
+                        manualPhaseData = session.phaseData || {};
+                        imagesManual = session.images || [];
+                        
+                        // Aggiorna i campi del form
+                        document.getElementById('article-name-manual').value = session.articleName || '';
+                        document.getElementById('progress-manual').value = session.progress || 'campionario';
+                        document.getElementById('manual-start-time').value = session.startTime || '';
+                        document.getElementById('manual-end-time').value = session.endTime || '';
+                        
+                        // Aggiorna visualizzazione
+                        showScreen('manual-input-form');
+                        updateImageGallery('manual');
+                        updatePositionsListManual();
+                    } catch (error) {
+                        console.error('Errore nel caricamento della sessione:', error);
+                        alert('Errore nel caricamento del file di sessione');
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            // Funzione per generare PDF
+            async function generatePDF(articleName, progress) {
+                const element = document.querySelector('.summary-container');
+                const opt = {
+                    margin: 1,
+                    filename: `${articleName}_${progress}_${new Date().toISOString().split('T')[0]}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                try {
+                    await html2pdf().set(opt).from(element).save();
+                } catch (error) {
+                    console.error('Errore durante la generazione del PDF:', error);
+                    alert('Si è verificato un errore durante la generazione del PDF');
+                }
+            }
+            function showSummary(type, data) {
+                const container = document.querySelector('.container');
+                const name = data.name || 'Senza nome';
+                const progress = data.progress || 'Non specificato';
+                const startTime = data.startTime || '';
+                const endTime = data.endTime || '';
+                const totalTime = startTime && endTime ? calculateTimeDifference(startTime, endTime) : "00:00:00";
+                const images = data.images || [];
+
+                let summaryHTML = `
+                    <div class="summary-container">
+                        <h2 class="text-center mb-3">
+                            ${name.toUpperCase()}
+                            <small class="d-block text-muted">${progress}</small>
+                        </h2>`;
+
+                // Sezione immagini
+                if (images.length > 0) {
+                    summaryHTML += `
+                        <div class="row mb-3">
+                            <div class="col-md-6 mx-auto">
+                                <div class="image-gallery">
+                                    ${images.map((imageData, index) => `
+                                        <div class="image-container">
+                                            <img src="${imageData}" alt="Foto ${index + 1}">
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>`;
+                }
+
+                // Sezione tempi
+                summaryHTML += `
+                    <div class="row mb-3">
+                        <div class="col-md-6 mx-auto">
+                            <div class="time-info">
+                                ${startTime ? `<p><strong>Inizio:</strong> ${startTime}</p>` : ''}
+                                ${endTime ? `<p><strong>Fine:</strong> ${endTime}</p>` : ''}
+                                <p><strong>Tempo Totale:</strong> ${totalTime}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">`;
+
+                // Tabelle delle fasi
+                if (type === 'manual' || type === 'import') {
+                    const phases = type === 'manual' ? data.phaseData : data.operationsByPhase;
+                    Object.entries(phases).forEach(([phase, items]) => {
+                        const totalPhaseTime = items.reduce((acc, curr) => {
+                            return acc + (typeof curr.timeSpent === 'number' ? curr.timeSpent : timeStringToSeconds(curr.duration));
+                        }, 0);
+
+                        summaryHTML += `
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header table-header-${phase}">
+                                        <h5 class="mb-0">${phase.charAt(0).toUpperCase() + phase.slice(1)}</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        ${type === 'import' ? '<th>N°</th>' : ''}
+                                                        <th>Posizione</th>
+                                                        <th>Tempo</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${items.map(item => `
+                                                        <tr>
+                                                            ${type === 'import' ? `<td>${item.number}</td>` : ''}
+                                                            <td>${type === 'import' ? item.description : item.position}</td>
+                                                            <td>${type === 'import' ? item.duration : formatTime(item.timeSpent)}</td>
+                                                        </tr>
+                                                    `).join('')}
+                                                    <tr class="table-active">
+                                                        <td colspan="${type === 'import' ? '2' : '1'}"><strong>Totale ${phase}</strong></td>
+                                                        <td><strong>${formatTime(totalPhaseTime)}</strong></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="text-center mt-3 mb-2 no-print">
-                                <button onclick="PDFHandler.generatePDF('${formData.get('name')}', 'Prototipo')" 
-                                        class="btn btn-success mx-1">
-                                    <i class="fas fa-save"></i> Salva PDF
-                                </button>
-                                <button onclick="location.reload()" class="btn btn-outline-secondary mx-1">
-                                    <i class="fas fa-redo"></i> Nuova Rilevazione
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                },
-
-                init() {
-                    const form = document.getElementById('new-prototype-form');
-                    form.addEventListener('submit', (e) => {
-                        e.preventDefault();
-                        this.addPrototype(form);
+                            </div>`;
                     });
                 }
-            };
 
-            // PDF Handler
-            const PDFHandler = {
-                async generatePDF(articleName, progress) {
-                    const element = document.querySelector('.summary-container');
-                    const opt = {
-                        margin: 1,
-                        filename: `${articleName}_${progress}_${new Date().toISOString().split('T')[0]}.pdf`,
-                        image: { type: 'jpeg', quality: 0.98 },
-                        html2canvas: { scale: 2 },
-                        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                    };
+                summaryHTML += `
+                    </div>
+                    <div class="text-center mt-3 mb-2 no-print">
+                        <button onclick="generatePDF('${name}', '${progress}')" class="btn btn-success mx-1">
+                            <i class="fas fa-save"></i> Salva PDF
+                        </button>
+                        ${type === 'manual' ? `
+                            <button onclick="saveCurrentSession()" class="btn btn-primary mx-1">
+                                <i class="fas fa-download"></i> Salva Sessione
+                            </button>
+                        ` : ''}
+                        <button onclick="location.reload()" class="btn btn-outline-secondary mx-1">
+                            <i class="fas fa-redo"></i> Nuova Rilevazione
+                        </button>
+                    </div>
+                </div>`;
 
-                    try {
-                        await html2pdf().set(opt).from(element).save();
-                    } catch (error) {
-                        console.error('Errore durante la generazione del PDF:', error);
-                        alert('Si è verificato un errore durante la generazione del PDF');
+                container.innerHTML = summaryHTML;
+            }
+
+            // Event Listeners
+            document.addEventListener('DOMContentLoaded', function() {
+                // Form submissions
+                document.getElementById('new-prototype-form').addEventListener('submit', handlePrototypeSubmit);
+                document.getElementById('manual-input-form').addEventListener('submit', handleManualSubmit);
+                document.getElementById('import-form').addEventListener('submit', handleImportSubmit);
+
+                // Buttons
+                document.getElementById('newPrototypeBtn').addEventListener('click', () => showScreen('new-prototype-form'));
+                document.getElementById('manualInputBtn').addEventListener('click', () => showScreen('manual-input-form'));
+                document.getElementById('importTxtBtn').addEventListener('click', () => document.getElementById('import-txt-input').click());
+                document.getElementById('loadSessionBtn').addEventListener('click', () => document.getElementById('load-session-input').click());
+                document.getElementById('add-manual-btn').addEventListener('click', addManualTime);
+
+                // File inputs
+                document.getElementById('import-txt-input').addEventListener('change', handleTxtImport);
+                document.getElementById('load-session-input').addEventListener('change', loadSessionFromFile);
+
+                // Photo buttons
+                document.getElementById('prototypePhotoBtn').addEventListener('click', () => document.getElementById('prototype-image-input').click());
+                document.getElementById('manualPhotoBtn').addEventListener('click', () => document.getElementById('manual-image-input').click());
+                document.getElementById('importPhotoBtn').addEventListener('click', () => document.getElementById('image-input-import').click());
+
+                // Home buttons
+                document.querySelectorAll('.homeBtn').forEach(btn => {
+                    btn.addEventListener('click', showHomeScreen);
+                });
+
+                // Enter key handling for manual input
+                document.getElementById('manual-input-form').addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        addManualTime(e);
                     }
-                }
-            };
-
-            // Inizializzazione
-            document.addEventListener('DOMContentLoaded', () => {
-                Navigation.init();
-                ImageHandler.init();
-                PrototypeHandler.init();
+                });
             });
         </script>
     </body>
