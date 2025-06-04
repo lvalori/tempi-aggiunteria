@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>Tempi Aggiunteria</title>
+        
+        <!-- Librerie CSS esterne -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        
+        <!-- Script necessari -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+        <style>
+            /* Variabili CSS */
+            :root {
+                --primary-color: #2D3142;
+                --secondary-color: #4F5D75;
+                --accent-color: #0066FF;
+                --background-light: #F9FAFC;
+                --text-primary: #2D3142;
+                --text-secondary: #4F5D75;
+                --success-color: #36B37E;
+                --error-color: #FF5630;
+            }
+
+            /* Stili di base */
+            body { 
+                background-color: var(--background-light);
+                padding: 10px;
+                touch-action: manipulation;
+                color: var(--text-primary);
+                line-height: 1.6;
+            }
+
+            .container {
+                background-color: white;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(45, 49, 66, 0.08);
+                padding: 24px;
+                margin-bottom: 20px;
+                max-width: 100%;
+                border: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            /* Stili dei pulsanti */
+            .btn {
+                padding: 12px 24px;
+                margin: 6px 0;
+                font-size: 1.1em;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+                font-weight: 500;
+            }
+
+            .btn-primary { background: var(--accent-color); border: none; }
+            .btn-primary:hover {
+                background: #005ae6;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px rgba(0, 102, 255, 0.2);
+            }
+
+            .btn-success { background: var(--success-color); border: none; }
+            .btn-success:hover {
+                background: #2d8f63;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px rgba(54, 179, 126, 0.2);
+            }
+
+            /* Stili degli input */
+            input, select {
+                height: 48px !important;
+                font-size: 16px !important;
+                border-radius: 8px !important;
+                border: 1px solid rgba(79, 93, 117, 0.2) !important;
+                padding: 0 16px !important;
+                transition: all 0.2s ease !important;
+            }
+
+            input:focus, select:focus {
+                border-color: var(--accent-color) !important;
+                box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1) !important;
+                outline: none !important;
+            }
+
+            .input-error {
+                border-color: var(--error-color) !important;
+            }
+
+            /* Stili della galleria immagini */
+            .image-gallery {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 12px;
+                margin: 15px 0;
+            }
+
+            .image-container {
+                position: relative;
+                width: 300px;
+                height: 300px;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 2px 4px rgba(45, 49, 66, 0.1);
+                margin: 0 auto;
+            }
+
+            .image-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
+
+            .image-container:hover img { transform: scale(1.05); }
+
+            .delete-image {
+                position: absolute;
+                top: 4px;
+                right: 4px;
+                background: var(--error-color);
+                color: white;
+                border-radius: 50%;
+                width: 24px;
+                height: 24px;
+                text-align: center;
+                line-height: 24px;
+                cursor: pointer;
+                opacity: 0.9;
+                transition: all 0.2s ease;
+            }
+
+            .delete-image:hover {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+
+            /* Altri stili di layout */
+            .time-info {
+                background: var(--background-light);
+                border-radius: 8px;
+                padding: 10px;
+                margin-top: 10px;
+            }
+
+            .positions-list {
+                margin-top: 20px;
+                background: var(--background-light);
+                border-radius: 12px;
+                padding: 16px;
+            }
+
+            .positions-list li {
+                padding: 12px 16px;
+                border-bottom: 1px solid rgba(79, 93, 117, 0.1);
+                margin-bottom: 8px;
+                background: white;
+                border-radius: 8px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                transition: all 0.2s ease;
+            }
+
+            /* Stili delle intestazioni delle tabelle */
+            .table-header-sbassatura { background: linear-gradient(135deg, #2962FF, #1565C0); color: white; }
+            .table-header-scarnitura { background: linear-gradient(135deg, #00C853, #2E7D32); color: white; }
+            .table-header-segni { background: linear-gradient(135deg, #6200EA, #4527A0); color: white; }
+            .table-header-applicazioni-termo { background: linear-gradient(135deg, #FF6D00, #E65100); color: white; }
+            .table-header-applicazioni-manuali { background: linear-gradient(135deg, #D50000, #B71C1C); color: white; }
+            .table-header-cucitura { background: linear-gradient(135deg, #304FFE, #1A237E); color: white; }
+            .table-header-ribattitura { background: linear-gradient(135deg, #00BFA5, #00796B); color: white; }
+            .table-header-preparazione-montaggio { background: linear-gradient(135deg, #FF3D00, #D84315); color: white; }
+            .table-header-rifilatura { background: linear-gradient(135deg, #C51162, #880E4F); color: white; }
+
+            /* Utility classes */
+            .hidden { display: none; }
+
+            /* Media queries */
+            @media print { 
+                .no-print { display: none; }
+                body { background: white; }
+                .container { box-shadow: none; border: none; }
+                .summary-container {
+                    width: 100%;
+                    max-width: none;
+                    margin: 0;
+                    padding: 0;
+                }
+                .row { page-break-inside: avoid; }
+                .card { break-inside: avoid; }
+                canvas { max-height: 100%; width: auto; }
+            }
+
+            @media (max-width: 768px) {
+                .container { padding: 16px; }
+                .btn { padding: 10px 20px; }
+                .image-gallery {
+                    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="text-center mb-4">Tempi Aggiunteria</h1>
+
+            <!-- HOME SCREEN -->
+            <div id="home-screen">
+                <button class="btn btn-success btn-block" id="newPrototypeBtn">
+                    <i class="fas fa-plus"></i> Nuovo Prototipo
+                </button>
+                <button class="btn btn-primary btn-block" id="manualInputBtn">
+                    <i class="fas fa-keyboard"></i> Inserisci Manualmente
+                </button>
+                <button class="btn btn-warning btn-block" onclick="document.getElementById('import-txt-input').click()">
+                    <i class="fas fa-file-import"></i> Importa tempi da txt
+                </button>
+                <input type="file" class="d-none" id="import-txt-input" accept=".txt" onchange="handleTxtImport(event)">
+                <button class="btn btn-info btn-block" onclick="document.getElementById('load-session-home').click()">
+                    <i class="fas fa-upload"></i> Carica Sessione Salvata
+                </button>
+                <input type="file" class="d-none" id="load-session-home" accept=".json" onchange="loadSessionFromFile(event)">
+            </div>
+
+            <!-- NUOVO PROTOTIPO SCREEN -->
+            <form id="new-prototype-form" class="hidden" autocomplete="off">
+                <h4 class="mb-3 text-center">Nuovo Prototipo</h4>
+                
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label for="prototype-name">Nome Articolo:</label>
+                        <input type="text" id="prototype-name" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Avanzamento:</label>
+                    <input type="text" class="form-control" value="Prototipo" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>Immagini:</label>
+                    <div class="image-gallery" id="prototype-image-gallery"></div>
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="captureImage('prototype')">
+                        <i class="fas fa-camera"></i> Aggiungi Foto
+                    </button>
+                    <input type="file" id="prototype-image-input" class="hidden" accept="image/*" capture="camera" onchange="handleImageUpload(event, 'prototype')">
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="prototype-start-time">Orario Inizio:</label>
+                            <input type="text" id="prototype-start-time" class="form-control" placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="prototype-end-time">Orario Fine:</label>
+                            <input type="text" id="prototype-end-time" class="form-control" placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="btn btn-success btn-block" onclick="endPrototypeInput()">Fine Rilevazioni</button>
+                    <button type="button" class="btn btn-outline-secondary btn-block" onclick="showHomeScreen()">Torna alla Home</button>
+                </div>
+            </form>
+
+            <!-- MANUAL INPUT SCREEN -->
+            <form id="manual-input-form" class="hidden" autocomplete="off">
+                <h4 class="mb-3 text-center">Inserisci Manualmente</h4>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+                        <label for="article-name-manual">Nome Articolo:</label>
+                        <input type="text" id="article-name-manual" class="form-control" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="progress-manual">Avanzamento:</label>
+                        <select id="progress-manual" class="form-control" required>
+                            <option value="campionario">Campionario</option>
+                            <option value="industrializzazione">Industrializzazione</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <label>Immagini:</label>
+                        <div class="image-gallery" id="image-gallery-manual"></div>
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="captureImage('manual')">
+                            <i class="fas fa-camera"></i> Aggiungi Foto
+                        </button>
+                        <input type="file" id="image-input-manual" class="hidden" accept="image/*" capture="camera" onchange="handleImageUpload(event, 'manual')">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="time-info">
+                            <div class="form-group">
+                                <label for="manual-start-time">Orario Inizio:</label>
+                                <input type="text" id="manual-start-time" class="form-control" placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
+                            </div>
+                            <div class="form-group">
+                                <label for="manual-end-time">Orario Fine:</label>
+                                <input type="text" id="manual-end-time" class="form-control" placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phase-manual">Fase:</label>
+                    <div class="input-group">
+                        <select id="phase-manual" class="form-control" required>
+                            <option value="sbassatura">Sbassatura</option>
+                            <option value="scarnitura">Scarnitura</option>
+                            <option value="segni">Segni</option>
+                            <option value="applicazioni-termo">Applicazioni termo</option>
+                            <option value="applicazioni-manuali">Applicazioni manuali/collanti</option>
+                            <option value="cucitura">Cucitura</option>
+                            <option value="ribattitura">Ribattitura</option>
+                            <option value="preparazione-montaggio">Preparazione montaggio</option>
+                            <option value="rifilatura">Rifilatura</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="position-manual">Posizione:</label>
+                    <input type="text" id="position-manual" class="form-control" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-8">
+                        <label for="manual-time">Tempo (hh:mm:ss):</label>
+                        <input type="text" id="manual-time" class="form-control" placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
+                    </div>
+                    <div class="form-group col-4">
+                        <label for="manual-seconds">o Secondi:</label>
+                        <input type="number" id="manual-seconds" class="form-control" placeholder="in sec.">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="btn btn-secondary btn-block" id="manual-add-btn">Aggiungi</button>
+                    <button type="button" class="btn btn-success btn-block" onclick="endManualInput()">Fine Rilevazioni</button>
+                    <button type="button" class="btn btn-outline-secondary btn-block" onclick="showHomeScreen()">Torna alla Home</button>
+                </div>
+
+                <div class="positions-list hidden" id="positions-list-manual">
+                    <h3>Posizioni Inserite</h3>
+                    <ul id="positions-data-manual" class="list-unstyled"></ul>
+                </div>
+            </form>
+
+            <!-- IMPORT FORM -->
+            <form id="import-form" class="hidden" autocomplete="off">
+                <h4 class="mb-3 text-center">Importa tempi da txt</h4>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+                        <label for="article-name-import">Nome Articolo:</label>
+                        <input type="text" id="article-name-import" class="form-control" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="progress-import">Avanzamento:</label>
+                        <select id="progress-import" class="form-control" required>
+                            <option value="campionario">Campionario</option>
+                            <option value="industrializzazione">Industrializzazione</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <label>Immagini:</label>
+                        <div class="image-gallery" id="image-gallery-import"></div>
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="captureImage('import')">
+                            <i class="fas fa-camera"></i> Aggiungi Foto
+                        </button>
+                        <input type="file" id="image-input-import" class="hidden" accept="image/*" capture="camera" onchange="handleImageUpload(event, 'import')">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="time-info">
+                            <div class="form-group">
+                                <label for="import-start-time">Orario Inizio:</label>
+                                <input type="text" id="import-start-time" class="form-control" placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
+                            </div>
+                            <div class="form-group">
+                                <label for="import-end-time">Orario Fine:</label>
+                                <input type="text" id="import-end-time" class="form-control" placeholder="00:00:00" pattern="^\d{2}:\d{2}:\d{2}$">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="imported-operations">
+                    <h5 class="mb-3">Operazioni Importate</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>N°</th>
+                                    <th>Inizio</th>
+                                    <th>Posizione</th>
+                                    <th>Durata</th>
+                                    <th>Fase</th>
+                                </tr>
+                            </thead>
+                            <tbody id="imported-operations-list">
+                                <!-- Le operazioni importate verranno inserite qui -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="button" class="btn btn-success btn-block" onclick="endImportInput()">Fine Rilevazioni</button>
+                    <button type="button" class="btn btn-outline-secondary btn-block" onclick="showHomeScreen()">Torna alla Home</button>
+                </div>
+            </form>
+        </div>
+        <!-- Script esterni (prima del nostro JavaScript) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <!-- Il nostro JavaScript -->
+        <script>
+            // Variabili globali
+            let prototypeImages = [];
+            let manualPhaseData = {};
+            let imagesManual = [];
+            let manualArticleName = "";
+            let manualProgress = "";
+            let manualStartTime = "";
+            let manualEndTime = "";
+            let manualSavedAt = "";
+            let importedImages = [];
+            let importedOperations = [];
+
+            // *** FUNZIONI DI GESTIONE IMMAGINI ***
+            function captureImage(context) {
+                let inputId;
+                switch(context) {
+                    case 'prototype':
+                        inputId = 'prototype-image-input';
+                        break;
+                    case 'manual':
+                        inputId = 'image-input-manual';
+                        break;
+                    case 'import':
+                        inputId = 'image-input-import';
+                        break;
+                    default:
+                        return;
+                }
+                document.getElementById(inputId).click();
+            }
+
+            function resizeImage(file) {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            canvas.width = 300;
+                            canvas.height = 300;
+                            
+                            // Calcola le dimensioni per il ritaglio centrato
+                            const size = Math.min(img.width, img.height);
+                            const startX = (img.width - size) / 2;
+                            const startY = (img.height - size) / 2;
+                            
+                            ctx.drawImage(img, startX, startY, size, size, 0, 0, 300, 300);
+                            resolve(canvas.toDataURL('image/jpeg', 0.8));
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            async function handleImageUpload(event, context) {
+                const file = event.target.files[0];
+                if (file) {
+                    const resizedImage = await resizeImage(file);
+                    switch(context) {
+                        case 'prototype':
+                            prototypeImages = [resizedImage];
+                            break;
+                        case 'manual':
+                            imagesManual.push(resizedImage);
+                            break;
+                        case 'import':
+                            importedImages.push(resizedImage);
+                            break;
+                    }
+                    updateImageGallery(context);
+                }
+            }
+
+            function updateImageGallery(context) {
+                let galleryId, imageArray;
+                
+                switch(context) {
+                    case 'prototype':
+                        galleryId = 'prototype-image-gallery';
+                        imageArray = prototypeImages;
+                        break;
+                    case 'manual':
+                        galleryId = 'image-gallery-manual';
+                        imageArray = imagesManual;
+                        break;
+                    case 'import':
+                        galleryId = 'image-gallery-import';
+                        imageArray = importedImages;
+                        break;
+                    default:
+                        return;
+                }
+
+                const gallery = document.getElementById(galleryId);
+                if (gallery && imageArray) {
+                    gallery.innerHTML = imageArray.map((imageData, index) => `
+                        <div class="image-container">
+                            <img src="${imageData}" alt="Foto ${index + 1}">
+                            <div class="delete-image" onclick="deleteImage(${index}, '${context}')">&times;</div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            function deleteImage(index, context) {
+                switch(context) {
+                    case 'prototype':
+                        prototypeImages.splice(index, 1);
+                        break;
+                    case 'manual':
+                        imagesManual.splice(index, 1);
+                        break;
+                    case 'import':
+                        importedImages.splice(index, 1);
+                        break;
+                }
+                updateImageGallery(context);
+            }
+
+            // *** FUNZIONI DI GESTIONE IMPORTAZIONE TXT ***
+            function handleTxtImport(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const content = e.target.result;
+                        const lines = content.trim().split('\n');
+                        
+                        importedOperations = [];
+                        lines.forEach((line, index) => {
+                            const [number, startTime, description] = line.trim().split(',');
+                            let duration = '00:00:00';
+                            
+                            if (index < lines.length - 1) {
+                                const nextLine = lines[index + 1];
+                                const nextStartTime = nextLine.split(',')[1];
+                                duration = calculateTimeDifference(startTime, nextStartTime);
+                            }
+                            
+                            importedOperations.push({
+                                number: parseInt(number),
+                                startTime,
+                                description: description.trim(),
+                                duration,
+                                phase: ''
+                            });
+                        });
+                        
+                        showImportForm();
+                        updateImportedOperationsTable();
+                    };
+                    reader.readAsText(file);
+                }
+            }
+
+            function updateImportedOperationsTable() {
+                const tbody = document.getElementById('imported-operations-list');
+                tbody.innerHTML = importedOperations.map(op => `
+                    <tr>
+                        <td>${op.number}</td>
+                        <td>${op.startTime}</td>
+                        <td>
+                            <input type="text" class="form-control form-control-sm" 
+                                value="${op.description}" 
+                                onchange="updateOperationDescription(${op.number - 1}, this.value)">
+                        </td>
+                        <td>${op.duration}</td>
+                        <td>
+                            <select class="form-control form-control-sm" 
+                                    onchange="updateOperationPhase(${op.number - 1}, this.value)">
+                                <option value="">Seleziona fase...</option>
+                                <option value="sbassatura">Sbassatura</option>
+                                <option value="scarnitura">Scarnitura</option>
+                                <option value="segni">Segni</option>
+                                <option value="applicazioni-termo">Applicazioni termo</option>
+                                <option value="applicazioni-manuali">Applicazioni manuali/collanti</option>
+                                <option value="cucitura">Cucitura</option>
+                                <option value="ribattitura">Ribattitura</option>
+                                <option value="preparazione-montaggio">Preparazione montaggio</option>
+                                <option value="rifilatura">Rifilatura</option>
+                            </select>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            function updateOperationDescription(index, value) {
+                importedOperations[index].description = value;
+            }
+
+            function updateOperationPhase(index, value) {
+                importedOperations[index].phase = value;
+            }
+
+            // *** FUNZIONI DI GESTIONE TEMPO ***
+            function formatTime(seconds) {
+                const hrs = Math.floor(seconds / 3600);
+                const mins = Math.floor((seconds % 3600) / 60);
+                const secs = seconds % 60;
+                return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            function timeStringToSeconds(str) {
+                if (/^\d+$/.test(str)) return parseInt(str, 10);
+                const parts = str.split(':');
+                if (parts.length !== 3) return 0;
+                return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseInt(parts[2]);
+            }
+
+            function calculateTimeDifference(startTime, endTime) {
+                const start = timeStringToSeconds(startTime);
+                const end = timeStringToSeconds(endTime);
+                return formatTime(end - start);
+            }
+
+            function calculateEndTime(startTime, duration) {
+                const startSeconds = timeStringToSeconds(startTime);
+                const durationSeconds = timeStringToSeconds(duration);
+                return formatTime(startSeconds + durationSeconds);
+            }
+
+            // *** FUNZIONI DI GESTIONE FORM ***
+            function validateTimeFormat(input) {
+                const timeRegex = /^\d{2}:\d{2}:\d{2}$/;
+                const isValid = timeRegex.test(input.value);
+                input.classList.toggle('input-error', !isValid && input.value !== '');
+                return isValid;
+            }
+
+            function showHomeScreen() {
+                document.getElementById('home-screen').classList.remove('hidden');
+                document.getElementById('new-prototype-form').classList.add('hidden');
+                document.getElementById('manual-input-form').classList.add('hidden')
+                document.getElementById('import-form').classList.add('hidden')
+                resetForms();
+            }
+
+            function showNewPrototypeScreen() {
+                document.getElementById('home-screen').classList.add('hidden');
+                document.getElementById('new-prototype-form').classList.remove('hidden');
+                document.getElementById('manual-input-form').classList.add('hidden');
+                document.getElementById('import-form').classList.add('hidden');
+            }
+
+            function showManualInputScreen() {
+                document.getElementById('home-screen').classList.add('hidden');
+                document.getElementById('new-prototype-form').classList.add('hidden');
+                document.getElementById('manual-input-form').classList.remove('hidden');
+                document.getElementById('import-form').classList.add('hidden');
+            }
+
+            function showImportForm() {
+                document.getElementById('home-screen').classList.add('hidden');
+                document.getElementById('new-prototype-form').classList.add('hidden');
+                document.getElementById('manual-input-form').classList.add('hidden');
+                document.getElementById('import-form').classList.remove('hidden');
+            }
+
+            function resetForms() {
+                // Reset prototype form
+                document.getElementById('prototype-name').value = '';
+                document.getElementById('prototype-start-time').value = '';
+                document.getElementById('prototype-end-time').value = '';
+                prototypeImages = [];
+                document.getElementById('prototype-image-gallery').innerHTML = '';
+
+                // Reset manual form
+                document.getElementById('article-name-manual').value = '';
+                document.getElementById('progress-manual').value = 'campionario';
+                document.getElementById('position-manual').value = '';
+                document.getElementById('manual-time').value = '';
+                document.getElementById('manual-seconds').value = '';
+                document.getElementById('manual-start-time').value = '';
+                document.getElementById('manual-end-time').value = '';
+                document.getElementById('positions-list-manual').classList.add('hidden');
+                document.getElementById('positions-data-manual').innerHTML = '';
+                manualPhaseData = {};
+                imagesManual = [];
+                document.getElementById('image-gallery-manual').innerHTML = '';
+
+                // Reset import form
+                document.getElementById('article-name-import').value = '';
+                document.getElementById('progress-import').value = 'campionario';
+                document.getElementById('import-start-time').value = '';
+                document.getElementById('import-end-time').value = '';
+                importedImages = [];
+                document.getElementById('image-gallery-import').innerHTML = '';
+                importedOperations = [];
+                document.getElementById('imported-operations-list').innerHTML = '';
+
+                // Reset global variables
+                manualArticleName = "";
+                manualProgress = "";
+                manualStartTime = "";
+                manualEndTime = "";
+            }
+
+            function updatePositionsListManual() {
+                const positionsList = document.getElementById('positions-data-manual');
+                let html = '';
+
+                Object.entries(manualPhaseData).forEach(([phase, data]) => {
+                    data.forEach((item, index) => {
+                        html += `
+                            <li>
+                                <div>
+                                    <strong>${phase}:</strong> ${item.position}
+                                    <small class="text-muted d-block">Tempo: ${formatTime(item.timeSpent)}</small>
+                                </div>
+                                <button class="btn btn-sm btn-danger" onclick="deletePosition('${phase}', ${index})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </li>
+                        `;
+                    });
+                });
+
+                positionsList.innerHTML = html;
+                document.getElementById('positions-list-manual').classList.remove('hidden');
+            }
+
+            function deletePosition(phase, index) {
+                if (manualPhaseData[phase]) {
+                    manualPhaseData[phase].splice(index, 1);
+                    if (manualPhaseData[phase].length === 0) {
+                        delete manualPhaseData[phase];
+                    }
+                    updatePositionsListManual();
+                }
+            }
+
+            // Funzione per salvare la sessione corrente
+            function saveCurrentSession() {
+                const session = {
+                    phaseData: manualPhaseData,
+                    images: imagesManual,
+                    articleName: manualArticleName,
+                    progress: manualProgress,
+                    startTime: manualStartTime,
+                    endTime: manualEndTime,
+                    savedAt: new Date().toISOString()
+                };
+
+                const blob = new Blob([JSON.stringify(session)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${manualArticleName}_${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            function updateImportedOperationsTable() {
+                const tbody = document.getElementById('imported-operations-list');
+                tbody.innerHTML = importedOperations.map(op => `
+                    <tr>
+                        <td>${op.number}</td>
+                        <td>${op.startTime}</td>
+                        <td>
+                            <input type="text" class="form-control form-control-sm" 
+                                value="${op.description}" 
+                                onchange="updateOperationDescription(${op.number - 1}, this.value)">
+                        </td>
+                        <td>${op.duration}</td>
+                        <td>
+                            <select class="form-control form-control-sm" 
+                                    onchange="updateOperationPhase(${op.number - 1}, this.value)"
+                                    value="${op.phase}">
+                                <option value="">Seleziona fase...</option>
+                                <option value="sbassatura">Sbassatura</option>
+                                <option value="scarnitura">Scarnitura</option>
+                                <option value="segni">Segni</option>
+                                <option value="applicazioni-termo">Applicazioni termo</option>
+                                <option value="applicazioni-manuali">Applicazioni manuali/collanti</option>
+                                <option value="cucitura">Cucitura</option>
+                                <option value="ribattitura">Ribattitura</option>
+                                <option value="preparazione-montaggio">Preparazione montaggio</option>
+                                <option value="rifilatura">Rifilatura</option>
+                            </select>
+                        </td>
+                    </tr>
+                `).join('');
+
+                // Imposta i valori delle fasi selezionate
+                importedOperations.forEach((op, index) => {
+                    if (op.phase) {
+                        const select = tbody.querySelectorAll('select')[index];
+                        if (select) select.value = op.phase;
+                    }
+                });
+                function endPrototypeInput() {
+                const prototypeName = document.getElementById('prototype-name').value.trim();
+                const startTime = document.getElementById('prototype-start-time').value.trim();
+                const endTime = document.getElementById('prototype-end-time').value.trim();
+
+                // Validazione
+                let hasError = false;
+                if (!prototypeName) {
+                    document.getElementById('prototype-name').classList.add('input-error');
+                    hasError = true;
+                }
+                if (startTime && !validateTimeFormat(document.getElementById('prototype-start-time'))) {
+                    hasError = true;
+                }
+                if (endTime && !validateTimeFormat(document.getElementById('prototype-end-time'))) {
+                    hasError = true;
+                }
+
+                if (hasError) return;
+
+                // Calcola il tempo totale
+                const totalTime = startTime && endTime ? calculateTimeDifference(startTime, endTime) : "00:00:00";
+
+                // Mostra il riepilogo
+                const container = document.querySelector('.container');
+                const gallery = prototypeImages.map((imageData, index) => `
+                    <div class="image-container">
+                        <img src="${imageData}" alt="Foto ${index + 1}">
+                    </div>
+                `).join('');
+
+                container.innerHTML = `
+                    <div class="summary-container">
+                        <h2 class="text-center mb-3">
+                            ${prototypeName.toUpperCase()}
+                            <small class="d-block text-muted">Prototipo</small>
+                        </h2>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6 mx-auto">
+                                <div class="image-gallery">${gallery}</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mx-auto">
+                                <div class="time-info">
+                                    ${startTime ? `<p><strong>Inizio:</strong> ${startTime}</p>` : ''}
+                                    ${endTime ? `<p><strong>Fine:</strong> ${endTime}</p>` : ''}
+                                    <p><strong>Tempo Totale:</strong> ${totalTime}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-3 mb-2 no-print">
+                            <button onclick="generatePDF('${prototypeName}', 'Prototipo')" class="btn btn-success mx-1">
+                                <i class="fas fa-save"></i> Salva PDF
+                            </button>
+                            <button onclick="window.location.reload()" class="btn btn-outline-secondary mx-1">
+                                <i class="fas fa-redo"></i> Nuova Rilevazione
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function generatePDF(articleName, progress) {
+                window.jsPDF = window.jspdf.jsPDF;
+                
+                const element = document.querySelector('.summary-container');
+                const opt = {
+                    margin: 1,
+                    filename: `${articleName}_${progress}_${new Date().toISOString().split('T')[0]}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                html2pdf().set(opt).from(element).save();
+            }
+
+            // *** FUNZIONI DI GESTIONE INSERIMENTO MANUALE ***
+            function addManualTime() {
+                const articleNameManual = document.getElementById('article-name-manual').value.trim();
+                const progressManual = document.getElementById('progress-manual').value;
+                const phase = document.getElementById('phase-manual').value;
+                const position = document.getElementById('position-manual').value.trim();
+                let manualTime = document.getElementById('manual-time').value.trim();
+                let manualSeconds = document.getElementById('manual-seconds').value.trim();
+                const startTime = document.getElementById('manual-start-time').value.trim();
+                const endTime = document.getElementById('manual-end-time').value.trim();
+
+                // Validate inputs
+                let hasError = false;
+                if (!articleNameManual) {
+                    document.getElementById('article-name-manual').classList.add('input-error');
+                    hasError = true;
+                }
+                if (!position) {
+                    document.getElementById('position-manual').classList.add('input-error');
+                    hasError = true;
+                }
+                if (!phase) {
+                    document.getElementById('phase-manual').classList.add('input-error');
+                    hasError = true;
+                }
+
+                if (hasError) return;
+
+                let seconds = 0;
+                if (manualSeconds) {
+                    seconds = parseInt(manualSeconds, 10) || 0;
+                    manualTime = formatTime(seconds);
+                    document.getElementById('manual-time').value = manualTime;
+                } else if (manualTime && manualTime.match(/^\d{2}:\d{2}:\d{2}$/)) {
+                    seconds = timeStringToSeconds(manualTime);
+                } else {
+                    document.getElementById('manual-time').classList.add('input-error');
+                    document.getElementById('manual-seconds').classList.add('input-error');
+                    return;
+                }
+
+                if (!manualPhaseData[phase]) {
+                    manualPhaseData[phase] = [];
+                }
+
+                manualPhaseData[phase].push({
+                    position: position,
+                    timeSpent: seconds,
+                    startTime: startTime || '',
+                    endTime: endTime || ''
+                });
+
+                // Clear fields and errors
+                document.getElementById('position-manual').value = '';
+                document.getElementById('manual-time').value = '';
+                document.getElementById('manual-seconds').value = '';
+                document.getElementById('phase-manual').classList.remove('input-error');
+                document.getElementById('position-manual').classList.remove('input-error');
+                document.getElementById('manual-time').classList.remove('input-error');
+                document.getElementById('manual-seconds').classList.remove('input-error');
+
+                // Update positions list
+                updatePositionsListManual();
+                }
+            }
+
+            // Event Listeners
+            document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('manual-add-btn').addEventListener('click', addManualTime);
+            document.getElementById('newPrototypeBtn').addEventListener('click', showNewPrototypeScreen);
+            document.getElementById('manualInputBtn').addEventListener('click', showManualInputScreen);
+            
+            // Gestione tasto Invio per il form manuale
+            document.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    const activeForm = document.activeElement.closest('form');
+                    if (activeForm && activeForm.id === 'manual-input-form') {
+                        e.preventDefault();
+                        addManualTime();
+                    }
+                }
+            });
+
+            // Aggiungi listener per il controllo del formato orario
+            const timeInputs = document.querySelectorAll('input[pattern]');
+            timeInputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    validateTimeFormat(this);
+                });
+            });
+        });
+        </script>
+    </body>
+</html>
