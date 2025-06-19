@@ -700,7 +700,8 @@
                 endTime: document.getElementById('prototype-end').value,
                 images: currentSession.images,
                 phases: {},
-                operations: []
+                operations: [],
+                chronologicalOperations: []
             };
             showSummary();
         }
@@ -983,25 +984,40 @@
         }
 
         // Funzioni di riepilogo e salvataggio
+        // Funzioni di riepilogo e salvataggio
         function showSummary() {
             const container = document.querySelector('.summary-container');
-            const name = currentSession.name;
-            const progress = currentSession.progress;
-            const startTime = currentSession.startTime;
-            const endTime = currentSession.endTime;
-            const totalTime = startTime && endTime ? calculateTimeDifference(startTime, endTime) : '';
+            const name = currentSession.name || '';
+            const progress = currentSession.progress || '';
+            const startTime = currentSession.startTime || '';
+            const endTime = currentSession.endTime || '';
+            const totalTime = (startTime && endTime) ? calculateTimeDifference(startTime, endTime) : '';
 
-            const chronologicalOperations = currentSession.chronologicalOperations || [];
+            // Usa la proprietà chronologicalOperations solo se esiste ed è un array
+            let chronologicalOperations = [];
+            if (Array.isArray(currentSession.chronologicalOperations)) {
+                chronologicalOperations = currentSession.chronologicalOperations;
+            } else if (currentSession.phases && Object.keys(currentSession.phases).length > 0) {
+                // Fallback se manca chronologicalOperations ma ci sono fasi
+                Object.entries(currentSession.phases).forEach(([phase, operations]) => {
+                    operations.forEach(op => {
+                        chronologicalOperations.push({
+                            phase: phase,
+                            position: op.position,
+                            timeSpent: op.timeSpent
+                        });
+                    });
+                });
+            }
 
             let summaryHTML = `
                 <h2 class="text-center mb-4">
                     ${name.toUpperCase()}
                     <small class="d-block text-muted">${progress}</small>
                 </h2>
-
                 <div class="row mb-4">
                     <div class="col-md-6">
-                        ${currentSession.images.length > 0 ? `
+                        ${currentSession.images && currentSession.images.length > 0 ? `
                             <div class="image-container">
                                 <img src="${currentSession.images[0]}" alt="Foto">
                             </div>
@@ -1015,97 +1031,82 @@
                             ${totalTime ? `<p><strong>Tempo Totale:</strong> ${totalTime}</p>` : ''}
                         </div>
                     </div>
-                </div>`;
+                </div>
+            `;
 
-            // Lista cronologica delle operazioni
+            // Mostra la sequenza operazioni solo se ci sono davvero delle operazioni
             if (chronologicalOperations.length > 0) {
                 summaryHTML += `
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="operation-list">
-                                <h5 class="mb-3">Sequenza Operazioni</h5>
-                                ${chronologicalOperations.map((op, index) => `
-                                    <div class="operation-item">
-                                        <span class="operation-number">${index + 1}.</span>
-                                        <div class="operation-color table-header-${op.phase}">
-                                            ${getPhaseAbbreviation(op.phase)}
-                                        </div>
-                                        <div class="operation-description">${op.position}</div>
-                                        <div class="operation-time">${formatTime(op.timeSpent)}</div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </div>`;
-            
-            
-            if (Object.keys(currentSession.phases).length > 0) {
-                summaryHTML += `
-
-                    <!-- Grafico isolato -->
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <div class="chart-container">
-                                <div id="total-time" class="total-time"></div>
-                                <canvas id="timeChart"></canvas>
-                            </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="operation-list">
+                            <h5 class="mb-3">Sequenza Operazioni</h5>
+                            ${chronologicalOperations.map((op, index) => `
+                                <div class="operation-item">
+                                    <span class="operation-number">${index + 1}.</span>
+                                    <span class="operation-color table-header-${op.phase}" style="min-width:40px;display:inline-block;">
+                                        ${getPhaseAbbreviation(op.phase)}
+                                    </span>
+                                    <span class="operation-description">${op.position}</span>
+                                    <span class="operation-time">${formatTime(op.timeSpent)}</span>
+                                </div>
+                            `).join('')}
                         </div>
                     </div>
-
-                    <!-- Tabelle su due colonne -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="phase-cards-container">
-                                ${Object.entries(currentSession.phases).map(([phase, operations]) => {
-                                    const totalPhaseTime = operations.reduce((acc, curr) => acc + curr.timeSpent, 0);
-                                    return `
-                                        <div class="phase-card">
-                                            <div class="phase-header table-header-${phase}">
-                                                <h6 class="mb-0">${phase.charAt(0).toUpperCase() + phase.slice(1)}</h6>
-                                                <span class="text-white">${formatTime(operations.reduce((acc, curr) => acc + curr.timeSpent, 0))}</span>
-                                            </div>
-                                            <div class="phase-content">
-                                                <div class="summary-table-responsive">
-                                                    <table class="table table-sm">
-                                                        <tbody>
-                                                            ${operations.map(op => `
-                                                                <tr>
-                                                                    <td>${op.position}</td>
-                                                                    <td class="text-right">${formatTime(op.timeSpent)}</td>
-                                                                </tr>
-                                                            `).join('')}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>`;
-                                }).join('')}
-                            </div>
-                        </div>
-                    </div>`;
+                </div>
+                `;
             }
 
+            // Mostra la tabella riepilogativa per fasi solo se ci sono fasi
+            if (currentSession.phases && Object.keys(currentSession.phases).length > 0) {
+                summaryHTML += `
+                <div class="row">
+                    <div class="col-12">
+                        <div class="phase-cards-container">
+                            ${Object.entries(currentSession.phases).map(([phase, operations]) => {
+                                const totalTime = operations.reduce((acc, curr) => acc + curr.timeSpent, 0);
+                                return `
+                                <div class="phase-card">
+                                    <div class="phase-header table-header-${phase}">
+                                        <h6 class="mb-0">${phase.charAt(0).toUpperCase() + phase.slice(1)}</h6>
+                                        <span class="text-white">${formatTime(totalTime)}</span>
+                                    </div>
+                                    <div class="phase-content">
+                                        <div class="summary-table-responsive">
+                                            <table class="table table-sm">
+                                                <tbody>
+                                                    ${operations.map(op => `
+                                                        <tr>
+                                                            <td>${op.position}</td>
+                                                            <td class="text-right">${formatTime(op.timeSpent)}</td>
+                                                        </tr>
+                                                    `).join('')}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+                `;
+            }
+
+            // Pulsanti di azione
             summaryHTML += `
-                <div class="text-center mt-4 no-print">
-                    <button onclick="savePDF()" class="btn btn-info mx-2">
-                        <i class="fas fa-file-pdf"></i> Salva PDF
-                    </button>
-                    <button onclick="saveSession()" class="btn btn-primary mx-2">
-                        <i class="fas fa-save"></i> Salva Sessione
-                    </button>
-                    <button onclick="showHomeScreen()" class="btn btn-secondary mx-2">
-                        <i class="fas fa-home"></i> Torna alla Home
-                    </button>
-                </div>`;
+                <div class="row mt-4">
+                    <div class="col-12 text-center">
+                        <button class="btn btn-secondary mr-2" onclick="showHomeScreen()">Torna alla Home</button>
+                        <button class="btn btn-info ml-2" onclick="window.print()"><i class="fas fa-print"></i> Stampa</button>
+                        <button class="btn btn-success ml-2" onclick="saveSession()"><i class="fas fa-save"></i> Salva Sessione</button>
+                    </div>
+                </div>
+            `;
 
             container.innerHTML = summaryHTML;
             showScreen('summary-screen');
-
-            // Crea il grafico dopo che l'elemento è nel DOM
-            if (Object.keys(currentSession.phases).length > 0) {
-                createTimeChart();
-            }
-        }
         }
 
         function createTimeChart() {
