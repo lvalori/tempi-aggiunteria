@@ -1107,6 +1107,10 @@
 
             container.innerHTML = summaryHTML;
             showScreen('summary-screen');
+
+            if (currentSession.phases && Object.keys(currentSession.phases).length > 0) {
+                createTimeChart();
+            }
         }
 
         function createTimeChart() {
