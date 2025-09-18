@@ -198,10 +198,33 @@
         .table-header-tempo-morto { background: linear-gradient(135deg, #6666663b, #38383863); }
         .table-header-tinta-bordi { background: linear-gradient(135deg, #eb1da6, #a3027b); }
 
+        /* Aggiungi questi stili nella sezione CSS */
         @media print {
-            .no-print {
-                display: none !important;
+            .macrofase-section {
+                break-inside: avoid;
+                margin: 20px 0;
+                box-shadow: none;
             }
+
+            .chart-section {
+                break-inside: avoid;
+                height: 350px; /* Leggermente più piccolo per la stampa */
+            }
+
+            .operations-section {
+                break-inside: avoid;
+            }
+
+            .total-time-general {
+                break-before: page; /* Il totale generale inizia su una nuova pagina */
+            }
+        }
+
+        .total-time-general {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 2rem;
         }
 
 
@@ -290,6 +313,7 @@
             padding: 1.5rem;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            page-break-inside: avoid; /* Importante per il PDF */
         }
 
         .macrofase-title {
@@ -301,10 +325,9 @@
         }
 
         .macrofase-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: column; /* Cambiato da grid a flex column */
             gap: 1.5rem;
-            margin-bottom: 1.5rem;
         }
 
         .chart-section {
@@ -318,16 +341,10 @@
             background: #f8f9fa;
             padding: 1rem;
             border-radius: 8px;
-            max-height: 400px;
-            overflow-y: auto;
+            /* Rimosso max-height e overflow-y */
         }
 
-        @media (max-width: 992px) {
-            .macrofase-content {
-                grid-template-columns: 1fr;
-            }
-        }
-
+        
     </style>
 </head>
 <body>
@@ -1263,7 +1280,7 @@
             hideAllScreens();
             document.getElementById('prototype-summary-screen').classList.remove('hidden');
         }
-        // Funzioni di riepilogo e salvataggio
+
         function showSummary() {
             const summaryContainer = document.querySelector('.summary-container');
             const macrofaseGroups = groupOperationsByMacrofase();
@@ -1271,6 +1288,14 @@
             let summaryHTML = `
                 <h2 class="text-center mb-4">${currentSession.name}</h2>
                 <p class="text-center mb-4">Avanzamento: ${currentSession.progress}</p>`;
+
+            // Aggiungi l'immagine se presente
+            if (currentSession.images && currentSession.images.length > 0) {
+                summaryHTML += `
+                <div class="text-center mb-4">
+                    <img src="${currentSession.images[0]}" alt="Immagine articolo" style="max-height: 400px; max-width: 100%; border-radius: 8px;">
+                </div>`;
+            }
 
             // Per ogni macrofase
             Object.entries(macrofaseGroups).forEach(([macrofase, operations]) => {
@@ -1288,12 +1313,22 @@
                                 ${generateOperationsList(operations)}
                             </div>
                         </div>
-                    </div>
-                    <div class="total-time text-center">
-                        Tempo totale: ${formatTime(macrofaseData.totalTime)}
+                        <div class="total-time text-center">
+                            Tempo totale macrofase: ${formatTime(macrofaseData.totalTime)}
+                        </div>
                     </div>
                 </div>`;
             });
+
+            // Aggiungi il tempo totale generale
+            const totalTime = Object.values(macrofaseGroups).reduce((total, operations) => {
+                return total + operations.reduce((acc, op) => acc + op.timeSpent, 0);
+            }, 0);
+
+            summaryHTML += `
+                <div class="total-time-general text-center mt-4">
+                    <h4>Tempo Totale Complessivo: ${formatTime(totalTime)}</h4>
+                </div>`;
 
             summaryContainer.innerHTML = summaryHTML;
 
@@ -1304,77 +1339,8 @@
             });
         }
 
-        function groupOperationsByMacrofase() {
-            const groups = {};
-            
-            currentSession.chronologicalOperations.forEach(op => {
-                const macrofase = op.macrofase || 'da-definire';
-                if (!groups[macrofase]) {
-                    groups[macrofase] = [];
-                }
-                groups[macrofase].push(op);
-            });
-            
-            return groups;
-        }
-
-        function analyzeMacrofaseData(operations) {
-            const phaseGroups = {};
-            let totalTime = 0;
-            
-            operations.forEach(op => {
-                if (!phaseGroups[op.phase]) {
-                    phaseGroups[op.phase] = 0;
-                }
-                phaseGroups[op.phase] += op.timeSpent;
-                totalTime += op.timeSpent;
-            });
-            
-            return {
-                totalTime: totalTime,
-                chartData: {
-                    labels: Object.keys(phaseGroups),
-                    data: Object.values(phaseGroups)
-                }
-            };
-        }
-
-        function generateOperationsList(operations) {
-            return operations.map(op => `
-                <div class="operation-item">
-                    <div class="operation-color table-header-${op.phase}">${op.phase.charAt(0).toUpperCase()}</div>
-                    <div class="operation-description">${op.position}</div>
-                    <div class="operation-time">${formatTime(op.timeSpent)}</div>
-                </div>
-            `).join('');
-        }
-
-        function createPieChart(canvasId, chartData) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: chartData.labels,
-                    datasets: [{
-                        data: chartData.data,
-                        backgroundColor: chartData.labels.map(phase => getPhaseColor(phase)),
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
-        }
-
+        // Funzione di supporto per ottenere i colori delle fasi
         function getPhaseColor(phase) {
-            // Utilizza i colori già definiti nei gradienti CSS
             const colors = {
                 'sbassatura': '#1565C0',
                 'scarnitura': '#2E7D32',
@@ -1410,6 +1376,16 @@
             if (totalElement) {
                 totalElement.textContent = `Tempo Totale: ${formatTime(visibleTotal)}`;
             }
+        }
+        
+        function generateOperationsList(operations) {
+            return operations.map(op => `
+                <div class="operation-item" style="margin-bottom: 8px;">
+                    <div class="operation-color table-header-${op.phase}" style="min-width: 40px;">${op.phase.charAt(0).toUpperCase()}</div>
+                    <div class="operation-description" style="flex: 1;">${op.position}</div>
+                    <div class="operation-time" style="min-width: 80px; text-align: right;">${formatTime(op.timeSpent)}</div>
+                </div>
+            `).join('');
         }
 
         function savePDF() {
